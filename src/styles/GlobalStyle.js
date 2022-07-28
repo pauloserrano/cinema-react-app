@@ -52,7 +52,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     * {
-        border-sizing: border-box;
+        box-sizing: border-box;
     }
 `
 
