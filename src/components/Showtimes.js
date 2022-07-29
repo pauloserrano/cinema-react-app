@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom"
 import styled from "styled-components"
 import api from '../services/axios'
+import Footer from "./Footer"
 
 const Showtimes = () => {
     const { idFilme } = useParams()
@@ -33,10 +34,12 @@ const Showtimes = () => {
                             ))}
                         </ul>
                     </section>))}
-                    <footer>
+                    <Footer>
                         <img src={sessionData.posterURL} alt={sessionData.title} />
-                        <p>{sessionData.title}</p>
-                    </footer>
+                        <div>
+                            <p>{sessionData.title}</p>
+                        </div>
+                    </Footer>
                 </>
             )
             : 'loading'
@@ -104,7 +107,6 @@ const StyledSession = styled.main`
 
         p{
             font-size: 26px;
-
         }
     }
 `

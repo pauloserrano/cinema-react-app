@@ -2,20 +2,22 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import api from '../services/axios'
+import Footer from './Footer'
 
 const Seats = () => {
     const { idSessao } = useParams()
-    const [seatsData, setSeatsData] = useState([])
+    const [seatsData, setSeatsData] = useState({})
     const [formData, setFormData] = useState({name: '', cpf: ''})
 
     useEffect(() => {
         api.get(`/showtimes/${idSessao}/seats`)
-            .then(({ data }) => setSeatsData(data.seats))
+            .then(({ data }) => setSeatsData(data))
             .catch(err => console.log(err))
     }, [idSessao])
 
     const handleSelection = (e) => {
         if (e.target.classList.contains('unavailable')) return
+
         e.target.classList.toggle('selected')
     }
 
@@ -30,10 +32,10 @@ const Seats = () => {
   return (
     <StyledSeats>
         <h1>Selecione os assentos</h1>
-        { seatsData 
+        { seatsData.seats 
             ? (<>
                 <ol>
-                    {seatsData.map(seat => (
+                    {seatsData['seats'].map(seat => (
                         <li key={seat.id}>
                             <button 
                                 onClick={handleSelection} 
@@ -60,6 +62,7 @@ const Seats = () => {
                 <form onSubmit={handleForm}>
                     <label htmlFor="name">Nome do comprador:</label>
                     <input 
+                        required
                         type="text" 
                         name="name" 
                         id="name" 
@@ -68,15 +71,23 @@ const Seats = () => {
                         onChange={(e) => handleFormChange(e, 'name')} />
                     <label htmlFor="cpf">CPF do comprador:</label>
                     <input 
-                    type="text" 
-                    name="cpf" 
-                    id="cpf" 
-                    placeholder="Digite seu CPF..."
-                    value={formData.cpf} 
-                    onChange={(e) => handleFormChange(e, 'cpf')} />
+                        required
+                        type="text" 
+                        name="cpf" 
+                        id="cpf" 
+                        placeholder="Digite seu CPF..."
+                        value={formData.cpf} 
+                        onChange={(e) => handleFormChange(e, 'cpf')} />
 
                     <button type="submit">Reservar assento(s)</button>
                 </form>
+                <Footer>
+                    <img src={seatsData.movie.posterURL} alt={seatsData.movie.title} />
+                    <div>
+                        <p>{seatsData.movie.title}</p>
+                        <p>{seatsData.day.weekday} - {seatsData.day.date}</p>
+                    </div>
+                </Footer>
             </>)
             : 'loading'
         }
@@ -90,11 +101,14 @@ const StyledSeats = styled.main`
     align-items: center;
     flex-direction: column;
     width: 100%;
-    padding: 0 16px;
 
     h1{
         font-size: 24px;
         margin: 36px auto;
+    }
+
+    ol, form{
+        padding: 0 16px;
     }
 
     ol{
