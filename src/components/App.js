@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Header from "./Header"
 import Home from "./Home"
-import Session from "./Session"
+import Seats from "./Seats"
+import Showtimes from "./Showtimes"
 
 
 const App = () => {
@@ -10,8 +11,8 @@ const App = () => {
         <Header />
         <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/sessoes/:idFilme' element={<Session />} />
-            <Route path='/assentos/:idSessao' element={<div>Tela 3</div>} />
+            <Route path='/sessoes/:idFilme' element={<Showtimes />} />
+            <Route path='/assentos/:idSessao' element={<Seats />} />
         </Routes>
     </Router>
   )

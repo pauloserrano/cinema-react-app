@@ -3,15 +3,15 @@ import { useParams, Link } from "react-router-dom"
 import styled from "styled-components"
 import api from '../services/axios'
 
-const Session = () => {
+const Showtimes = () => {
     const { idFilme } = useParams()
     const [sessionData, setSessionData] = useState({})
 
     useEffect(() => {
-        api.get(`${idFilme}/showtimes`)
+        api.get(`/movies/${idFilme}/showtimes`)
             .then(({ data }) => setSessionData(data))
             .catch(err => console.log(err))
-    }, [])
+    }, [idFilme])
     
 
   return (
@@ -23,13 +23,15 @@ const Session = () => {
                     {sessionData.days.map((value, id) => (
                     <section key={id}>
                         <h2>{value.weekday} - {value.date}</h2>
-                        <div>
+                        <ul>
                             {value.showtimes.map(({ name, id }) => (
-                                <Link to={`/assentos/${id}`} key={id}>
-                                    <button key={id}>{name}</button>
-                                </Link>
+                                <li>
+                                    <Link to={`/assentos/${id}`} key={id}>
+                                        <button key={id}>{name}</button>
+                                    </Link>
+                                </li>
                             ))}
-                        </div>
+                        </ul>
                     </section>))}
                     <footer>
                         <img src={sessionData.posterURL} alt={sessionData.title} />
@@ -58,17 +60,20 @@ const StyledSession = styled.main`
         align-items: center;
         flex-direction: column;
 
-        h2, div{
+        h2, ul{
             font-size: 20px;
             margin-bottom: 1em;
         }
 
-        div{
+        ul{
             display: flex;
+
+            li{
+                margin: 0 .25em;
+            }
 
             button{
                 border: transparent;
-                margin: 0 .25em;
                 padding: .5em 1em;
                 font-size: 18px;
                 background-color: #E8833A;
@@ -104,4 +109,4 @@ const StyledSession = styled.main`
     }
 `
 
-export default Session
+export default Showtimes

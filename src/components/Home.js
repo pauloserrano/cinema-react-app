@@ -7,7 +7,7 @@ const Home = () => {
     const [movies, setMovies] = useState([])
 
     useEffect(() => {
-        api.get()
+        api.get('/movies')
             .then(({ data }) => {
             setMovies(data)
             console.log(data)
@@ -16,14 +16,19 @@ const Home = () => {
 
   return (
     <StyledHome>
-        {movies 
-        ? movies.map(movie => (
-            <Link to={`/sessoes/${movie.id}`}>
-                <img src={movie.posterURL} alt={movie.title} />
-            </Link>
-        ))
-        : 'loading'
-        }
+        <h1>Selecione o filme</h1>
+        <ul>
+            {movies 
+            ? movies.map(movie => (
+                <li>
+                    <Link to={`/sessoes/${movie.id}`}>
+                        <img src={movie.posterURL} alt={movie.title} />
+                    </Link>
+                </li>
+            ))
+            : 'loading'
+            }
+        </ul> 
     </StyledHome>
   )
 }
@@ -31,7 +36,18 @@ const Home = () => {
 const StyledHome = styled.main`
     display: flex;
     justify-content: center;
-    flex-flow: row wrap;
+    flex-flow: column wrap;
+
+    h1{
+        font-size: 24px;
+        margin: 36px auto;
+    }
+
+    ul{
+        display: flex;
+        justify-content: center;
+        flex-flow: row wrap;
+    }
 
     img{
         max-width: 150px;
