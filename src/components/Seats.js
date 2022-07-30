@@ -29,7 +29,8 @@ const Seats = () => {
         }
 
         const seatID = e.target.id
-        const isSelected = seats.indexOf(seatID) >= 0
+        const isSelected = seats.filter(seat => seat.id === seatID).length > 0
+        console.log(seats, seatID, isSelected)
 
         if (isSelected){
             setSeats(arr => [...arr].filter(seat => seat.id !== seatID))
