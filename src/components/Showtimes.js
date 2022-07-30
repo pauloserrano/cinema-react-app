@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import styled from "styled-components"
 import api from '../services/axios'
 import Footer from "./Footer"
+import Loader from "./Loader"
 
 const Showtimes = () => {
     const { idFilme } = useParams()
@@ -42,7 +43,7 @@ const Showtimes = () => {
                     </Footer>
                 </>
             )
-            : 'loading'
+            : <Loader />
         }
     </StyledSession>
   )

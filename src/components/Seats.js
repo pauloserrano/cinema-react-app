@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import api from '../services/axios'
 import Form from './Form'
 import Footer from './Footer'
+import Loader from './Loader'
 
 
 const Seats = () => {
@@ -106,7 +107,7 @@ const Seats = () => {
                     </div>
                 </Footer>
             </>)
-            : 'loading'
+            : <Loader />
         }
     </StyledSeats>
   )

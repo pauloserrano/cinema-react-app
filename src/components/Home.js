@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import api from '../services/axios'
+import Loader from './Loader'
 
 const Home = () => {
     const [movies, setMovies] = useState([])
@@ -16,19 +17,21 @@ const Home = () => {
 
   return (
     <StyledHome>
-        <h1>Selecione o filme</h1>
-        <ul>
-            {movies 
-            ? movies.map(movie => (
-                <li>
-                    <Link to={`/sessoes/${movie.id}`}>
-                        <img src={movie.posterURL} alt={movie.title} />
-                    </Link>
-                </li>
-            ))
-            : 'loading'
-            }
-        </ul> 
+        {movies 
+            ? (<>
+                <h1>Selecione o filme</h1>
+                <ul>
+                    {movies.map(movie => (
+                    <li>
+                        <Link to={`/sessoes/${movie.id}`}>
+                            <img src={movie.posterURL} alt={movie.title} />
+                        </Link>
+                    </li>
+                    ))}
+                </ul>
+            </>)
+            : <Loader />
+        }
     </StyledHome>
   )
 }
