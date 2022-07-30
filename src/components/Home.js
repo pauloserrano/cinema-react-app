@@ -41,6 +41,7 @@ const StyledHome = styled.main`
     h1{
         font-size: 24px;
         margin: 36px auto;
+        letter-spacing: 0.04em;
     }
 
     ul{

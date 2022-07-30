@@ -1,43 +1,78 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import api from '../services/axios'
+import Form from './Form'
 import Footer from './Footer'
 
+
 const Seats = () => {
+    const [movieData, setMovieData] = useState({})
+    const [formData, setFormData] = useState({})
+    const [seats, setSeats] = useState([])
     const { idSessao } = useParams()
-    const [seatsData, setSeatsData] = useState({})
-    const [formData, setFormData] = useState({name: '', cpf: ''})
+    const navigate = useNavigate()
+
 
     useEffect(() => {
         api.get(`/showtimes/${idSessao}/seats`)
-            .then(({ data }) => setSeatsData(data))
+            .then(({ data }) => setMovieData(data))
             .catch(err => console.log(err))
     }, [idSessao])
 
+
     const handleSelection = (e) => {
-        if (e.target.classList.contains('unavailable')) return
+        if (e.target.classList.contains('unavailable')){
+            alert("Esse assento não está disponível")
+            return  
+        }
+
+        const seatID = e.target.id
+        const isSelected = seats.indexOf(seatID) >= 0
+
+        if (isSelected){
+            setSeats(arr => [...arr].filter(seat => seat !== seatID))
+        
+        } else {
+            setSeats(arr => [...arr, seatID])
+        }
 
         e.target.classList.toggle('selected')
     }
 
-    const handleForm = (e) => {
-        e.preventDefault()
+
+    const handleFormSubmit = async (e) => {
+        try {
+            e.preventDefault()
+
+            if (seats.length <= 0) {
+                alert('Escolha pelo menos um assento.')
+                return
+            }
+
+            await api.post(`/seats/book-many`, {
+                ids: seats, 
+                name: formData.name, 
+                cpf: formData.cpf
+            })
+
+            navigate('/success', {state: { movieData, formData }})
+        
+        } catch (err){
+            console.log(err)
+        }
     }
 
-    const handleFormChange = (e, type) => {
-        setFormData({...formData, [type]: e.target.value})
-    }
 
   return (
     <StyledSeats>
         <h1>Selecione os assentos</h1>
-        { seatsData.seats 
+        {movieData.seats 
             ? (<>
                 <ol>
-                    {seatsData['seats'].map(seat => (
+                    {movieData['seats'].map(seat => (
                         <li key={seat.id}>
-                            <button 
+                            <button id={seat.id}
                                 onClick={handleSelection} 
                                 className={seat.isAvailable ? '' : 'unavailable'}>
                                     {seat.name >= 10 ? seat.name : `0${seat.name}`}
@@ -59,33 +94,15 @@ const Seats = () => {
                         </div>
                     </li>
                 </ol>
-                <form onSubmit={handleForm}>
-                    <label htmlFor="name">Nome do comprador:</label>
-                    <input 
-                        required
-                        type="text" 
-                        name="name" 
-                        id="name" 
-                        placeholder="Digite seu nome..."
-                        value={formData.name} 
-                        onChange={(e) => handleFormChange(e, 'name')} />
-                    <label htmlFor="cpf">CPF do comprador:</label>
-                    <input 
-                        required
-                        type="text" 
-                        name="cpf" 
-                        id="cpf" 
-                        placeholder="Digite seu CPF..."
-                        value={formData.cpf} 
-                        onChange={(e) => handleFormChange(e, 'cpf')} />
-
-                    <button type="submit">Reservar assento(s)</button>
-                </form>
+                <Form 
+                    formData={formData} 
+                    setFormData={setFormData} 
+                    handleFormSubmit={handleFormSubmit} />
                 <Footer>
-                    <img src={seatsData.movie.posterURL} alt={seatsData.movie.title} />
+                    <img src={movieData.movie.posterURL} alt={movieData.movie.title} />
                     <div>
-                        <p>{seatsData.movie.title}</p>
-                        <p>{seatsData.day.weekday} - {seatsData.day.date}</p>
+                        <p>{movieData.movie.title}</p>
+                        <p>{movieData.day.weekday} - {movieData.day.date}</p>
                     </div>
                 </Footer>
             </>)
@@ -96,6 +113,7 @@ const Seats = () => {
   )
 }
 
+
 const StyledSeats = styled.main`
     display: flex;
     align-items: center;
@@ -105,6 +123,7 @@ const StyledSeats = styled.main`
     h1{
         font-size: 24px;
         margin: 36px auto;
+        letter-spacing: 0.04em;
     }
 
     ol, form{
@@ -163,45 +182,6 @@ const StyledSeats = styled.main`
 
         li, button{
             border-radius: 50%;
-        }
-    }
-
-    form{
-        display: flex;
-        flex-direction: column;
-        width: min(100%, 500px);
-        margin: 0 auto;
-
-        label{
-            color: #293845;
-            margin-bottom: .5em;
-        }
-        
-        input{
-            border: 1px solid #D4D4D4;
-            margin-bottom: 1em;
-            padding: 12px;
-            width: 100%;
-        }
-
-        input::placeholder{
-            color: #AFAFAF;
-            font-style: italic;
-        }
-
-        label, input, input::placeholder, button{
-            font-size: 18px;
-        }
-
-        button{
-            width: min(80%, 350px);
-            margin: 1em auto;
-            padding: .5em 1em;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            background-color: #E8833A;
-            cursor: pointer;
         }
     }
 `

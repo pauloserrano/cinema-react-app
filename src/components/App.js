@@ -3,6 +3,7 @@ import Header from "./Header"
 import Home from "./Home"
 import Seats from "./Seats"
 import Showtimes from "./Showtimes"
+import Success from "./Success"
 
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
             <Route path='/' element={<Home />} />
             <Route path='/sessoes/:idFilme' element={<Showtimes />} />
             <Route path='/assentos/:idSessao' element={<Seats />} />
+            <Route path='/success' element={<Success />} />
         </Routes>
     </Router>
   )
