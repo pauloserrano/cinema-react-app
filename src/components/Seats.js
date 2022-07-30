@@ -31,10 +31,10 @@ const Seats = () => {
         const isSelected = seats.indexOf(seatID) >= 0
 
         if (isSelected){
-            setSeats(arr => [...arr].filter(seat => seat !== seatID))
+            setSeats(arr => [...arr].filter(seat => seat.id !== seatID))
         
         } else {
-            setSeats(arr => [...arr, seatID])
+            setSeats(arr => [...arr, {number: e.target.innerText, id: seatID}])
         }
 
         e.target.classList.toggle('selected')
@@ -51,12 +51,12 @@ const Seats = () => {
             }
 
             await api.post(`/seats/book-many`, {
-                ids: seats, 
+                ids: seats.map(seat => seat.id), 
                 name: formData.name, 
                 cpf: formData.cpf
             })
 
-            navigate('/success', {state: { movieData, formData }})
+            navigate('/success', {state: { movieData, formData, seats }})
         
         } catch (err){
             console.log(err)
@@ -108,7 +108,6 @@ const Seats = () => {
             </>)
             : 'loading'
         }
-        
     </StyledSeats>
   )
 }

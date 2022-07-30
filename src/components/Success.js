@@ -3,8 +3,8 @@ import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
 const Success = () => {
-  const { state: { movieData, formData } } = useLocation()
-  console.log({movieData, formData})
+  const { state: { movieData, formData, seats } } = useLocation()
+  console.log({movieData, formData, seats})
 
   return (
     <StyledMain>
@@ -16,8 +16,9 @@ const Success = () => {
         </div>
         <div>
           <h2>Ingressos</h2>
-          <p>Assento 15</p>
-          <p>Assento 16</p>
+          {seats.map(seat => (
+            <p key={seat.id}>Assento {seat.number}</p>
+          ))}
         </div>
         <div>
           <h2>Comprador</h2>
@@ -66,12 +67,13 @@ const StyledMain = styled.main`
 
       p{
         font-size: 22px;
+        line-height: 1.25em;
       }
     }
 
     button{
       width: min(80%, 350px);
-      margin: 3em auto 8px;
+      margin: 2.5em auto 8px;
       padding: 1em 1.5em;
       border: none;
       border-radius: 5px;
