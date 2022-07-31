@@ -1,12 +1,27 @@
 import styled from "styled-components"
 
 const Loader = () => {
-  return (
-    <StyledLoader></StyledLoader>
-  )
+  return (<>
+    <Overlay />
+    <StyledLoader />
+    </>)
 }
 
+const Overlay = styled.div`
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+`
+
 const StyledLoader = styled.span`
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     transform: rotateZ(45deg);
     perspective: 1000px;
     border-radius: 50%;
