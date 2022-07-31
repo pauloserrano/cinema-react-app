@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
+import { cpf } from 'cpf-cnpj-validator'
 import styled from 'styled-components'
 
 const Success = () => {
@@ -23,7 +24,7 @@ const Success = () => {
         <div>
           <h2>Comprador</h2>
           <p>Nome: {formData.name}</p>
-          <p>CPF: {formData.cpf}</p>
+          <p>CPF: {cpf.format(formData.cpf)}</p>
         </div>
         <button>
           <Link to="/ ">Voltar para Home</Link>

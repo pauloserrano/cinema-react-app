@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { cpf } from 'cpf-cnpj-validator'
 import styled from 'styled-components'
 import api from '../services/axios'
 import Form from './Form'
@@ -30,7 +31,6 @@ const Seats = () => {
 
         const seatID = e.target.id
         const isSelected = seats.filter(seat => seat.id === seatID).length > 0
-        console.log(seats, seatID, isSelected)
 
         if (isSelected){
             setSeats(arr => [...arr].filter(seat => seat.id !== seatID))
@@ -44,14 +44,17 @@ const Seats = () => {
 
 
     const handleFormSubmit = async (e) => {
+        e.preventDefault()
+        if (seats.length <= 0) {
+            alert('Escolha pelo menos um assento.')
+            return
+        
+        } else if (!cpf.isValid(formData.cpf)){
+            alert('CPF inválido.')
+            return
+        }
+
         try {
-            e.preventDefault()
-
-            if (seats.length <= 0) {
-                alert('Escolha pelo menos um assento.')
-                return
-            }
-
             await api.post(`/seats/book-many`, {
                 ids: seats.map(seat => seat.id), 
                 name: formData.name, 
@@ -68,9 +71,9 @@ const Seats = () => {
 
   return (
     <StyledSeats>
-        <h1>Selecione os assentos</h1>
         {movieData.seats 
             ? (<>
+                <h1>Selecione os assentos</h1>
                 <ol>
                     {movieData['seats'].map(seat => (
                         <li key={seat.id}>

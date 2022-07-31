@@ -19,30 +19,28 @@ const Showtimes = () => {
   return (
     <StyledSession>
         {sessionData.days 
-            ? (
-                <>
-                    <h1>Selecione o horário</h1>
-                    {sessionData.days.map((value, id) => (
-                    <section key={id}>
-                        <h2>{value.weekday} - {value.date}</h2>
-                        <ul>
-                            {value.showtimes.map(({ name, id }) => (
-                                <li>
-                                    <Link to={`/assentos/${id}`} key={id}>
-                                        <button key={id}>{name}</button>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </section>))}
-                    <Footer>
-                        <img src={sessionData.posterURL} alt={sessionData.title} />
-                        <div>
-                            <p>{sessionData.title}</p>
-                        </div>
-                    </Footer>
-                </>
-            )
+            ? (<>
+                <h1>Selecione o horário</h1>
+                {sessionData.days.map((value, id) => (
+                <section key={id}>
+                    <h2>{value.weekday} - {value.date}</h2>
+                    <ul>
+                        {value.showtimes.map(({ name, id }) => (
+                            <li>
+                                <Link to={`/assentos/${id}`} key={id}>
+                                    <button key={id}>{name}</button>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </section>))}
+                <Footer>
+                    <img src={sessionData.posterURL} alt={sessionData.title} />
+                    <div>
+                        <p>{sessionData.title}</p>
+                    </div>
+                </Footer>
+            </>)
             : <Loader />
         }
     </StyledSession>
